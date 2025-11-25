@@ -1,6 +1,8 @@
 package com.early_express.ai_service.ai.presentation.rest.dto;
 
 import com.early_express.ai_service.ai.domain.ItemInfoDomain;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,7 +15,10 @@ import java.util.List;
 public class ShipmentAiRequest {
     // 주문 및 상품 정보
     private String orderId;
+
+    @Schema(format = "string", example = "2000-10-10T09:00:00")
     private LocalDateTime orderTime;
+
     private String customerName;
     private String customerEmail;
     private List<ItemInfoDomain> itemInfos; // ItemInfoDomain 재사용 (DTO로 간주)
@@ -24,9 +29,23 @@ public class ShipmentAiRequest {
     private List<String> waypoints;
     private String shipmentDestination;
 
+    // **[추가]** 배송 예상 시간 (도착 시간) 필드 추가
+    @Schema(format = "string", example = "2000-10-12T09:00:00")
+    private LocalDateTime estimatedTime;
+
     // 배송 담당자 및 근무 시간
     private String deliveryManagerName;
     private String deliveryManagerContact;
+
+    @JsonFormat(pattern = "HH:mm:ss")
+    @Schema(format = "string", example = "09:00:00")
     private LocalTime personnelWorkStart; // 예: 09:00
+
+    @JsonFormat(pattern = "HH:mm:ss")
+    @Schema(format = "string", example = "18:00:00")
     private LocalTime personnelWorkEnd;   // 예: 18:00
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @Schema(format = "string", example = "2000-10-12T09:00:00")
+    private LocalDateTime finalShipmentDeadline;
 }

@@ -25,6 +25,7 @@ ext {
 }
 
 dependencies {
+    implementation 'org.springframework.ai:spring-ai-starter-model-ollama:1.1.0'
     // ===== Spring Boot Core =====
     // 애플리케이션 모니터링 및 헬스체크 엔드포인트 제공
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -68,9 +69,6 @@ dependencies {
     // Prometheus 메트릭 수집
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
-    // ollama
-    implementation 'org.springframework.ai:spring-ai-starter-model-ollama'
-
     // ===== Database =====
     // JPA ORM 지원
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -109,7 +107,7 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
 
     // ===== Environment Variables =====
-    // .env 파일에서 환경변수 로드
+    // .env2 파일에서 환경변수 로드
     implementation 'io.github.cdimascio:dotenv-java:3.1.0'
 
     // ===== API Documentation =====

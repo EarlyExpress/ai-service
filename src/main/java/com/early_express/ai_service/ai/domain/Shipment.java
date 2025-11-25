@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "p_shipment_request")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ShipmentRequestDomain {
+public class Shipment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,8 +36,8 @@ public class ShipmentRequestDomain {
     @CollectionTable(name = "p_item_info", joinColumns = @JoinColumn(name = "request_id"))
     private List<ItemInfoDomain> itemInfos;
 
-    @Column(name = "delivery_deadline", nullable = false)
-    private LocalDateTime deliveryDeadline; // 납기일자 및 시간
+//    @Column(name = "delivery_deadline", nullable = false)
+//    private LocalDateTime deliveryDeadline; // 납기일자 및 시간*/
 
     @Column(name = "shipment_origin", nullable = false)
     private String shipmentOrigin; //발송지
@@ -62,8 +62,14 @@ public class ShipmentRequestDomain {
     @Column(name = "delivery_personnel_work_end")
     private LocalTime personnelWorkEnd;
 
+    @Column(name = "ai_final_deadline")
+    private LocalDateTime finalShipmentDeadline;
+
+    @Column(name = "ai_estimated_time")
+    private LocalDateTime estimatedTime;
+
     @Builder
-    public  ShipmentRequestDomain(String orderId, LocalDateTime orderTime, String customerName, String customerEmail
+    public Shipment(String orderId, LocalDateTime orderTime, String customerName, String customerEmail
             , List<ItemInfoDomain> itemInfos, LocalDateTime deliveryDeadline, String shipmentOrigin
             , List<String> waypoints, String shipmentDestination, String deliveryManagerName
             , String deliveryManagerContact, LocalTime personnelWorkStart, LocalTime personnelWorkEnd) {
@@ -72,7 +78,6 @@ public class ShipmentRequestDomain {
         this.customerName = customerName;
         this.customerEmail = customerEmail;
         this.itemInfos = itemInfos;
-        this.deliveryDeadline = deliveryDeadline;
         this.shipmentOrigin = shipmentOrigin;
         this.waypoints = waypoints;
         this.shipmentDestination = shipmentDestination;
@@ -80,6 +85,12 @@ public class ShipmentRequestDomain {
         this.deliveryManagerContact = deliveryManagerContact;
         this.personnelWorkStart = personnelWorkStart;
         this.personnelWorkEnd = personnelWorkEnd;
+    }
+
+    // 🌟 [추가] AI 결과를 업데이트하는 메서드 🌟
+    public void updateAiResults(LocalDateTime finalDeadline, LocalDateTime estimatedTime) {
+        this.finalShipmentDeadline = finalDeadline;
+        this.estimatedTime = estimatedTime;
     }
 
 
@@ -95,7 +106,7 @@ public class ShipmentRequestDomain {
         }
 
         // 3. 요청 납기일자 및 시간 (requestedDeliveryDeadline)
-        if (deliveryDeadline == null) {
+        if (finalShipmentDeadline == null) {
             throw new IllegalArgumentException("필수 데이터: 요청 납기일자(requestedDeliveryDeadline)가 누락되었습니다.");
         }
 
@@ -106,7 +117,7 @@ public class ShipmentRequestDomain {
         }
 
         // 추가 검증: 요청 납기일자가 현재 시간보다 이전인지 확인
-        if (deliveryDeadline.isBefore(LocalDateTime.now())) {
+        if (finalShipmentDeadline.isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("요청 납기일자는 현재 시간보다 이전일 수 없습니다.");
         }
     }
