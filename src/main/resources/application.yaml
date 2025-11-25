@@ -33,18 +33,22 @@ spring:
         multiplier: 1.1  # 재시도 간격 증가율
 
   ai:
-    model:
-      chat: ollama
-    ollama:
-      base-url: http://localhost:11434
-      chat:
-        options:
-          model: huihui_ai/kanana-nano-abliterated
-          temperature: 0.5
-      init:
-        pull-model-strategy: when_missing
-        timeout: 60s
-        max-retries: 1
+    vertex.ai.gemini:
+      projectId: gen-lang-client-0838714591
+      location: us-west1
+#  ai:
+#    model:
+#      chat: ollama
+#    ollama:
+#      base-url: http://localhost:11434
+#      chat:
+#        options:
+#          model: huihui_ai/kanana-nano-abliterated
+#          temperature: 0.5
+#      init:
+#        pull-model-strategy: when_missing
+#        timeout: 60s
+#        max-retries: 1
 
   # ===== Kafka 메시징 설정 =====
   kafka:

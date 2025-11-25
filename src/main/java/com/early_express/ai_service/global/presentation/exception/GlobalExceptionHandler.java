@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
             HttpServletRequest request,
             MethodArgumentNotValidException e) {
 
-        log.error("입력값 검증 실패: {}", e.getMessage());
+        log.error("입력값 검증 실패: {}", e.getMessage(), e);
 
         String message = e.getBindingResult()
                 .getAllErrors()
@@ -77,7 +77,7 @@ public class GlobalExceptionHandler {
             HttpServletRequest request,
             BindException e) {
 
-        log.error("바인딩 실패: {}", e.getMessage());
+        log.error("바인딩 실패: {}", e.getMessage(), e);
 
         String message = e.getBindingResult()
                 .getAllErrors()
@@ -108,7 +108,7 @@ public class GlobalExceptionHandler {
 	})
 	public ResponseEntity<ErrorResponse> handleAuthenticationException(HttpServletRequest request, AuthenticationException e) {
 
-		log.error("인증 예외 발생: {}", e.getMessage());
+		log.error("인증 예외 발생: {}", e.getMessage(), e);
 
 		ErrorCode errorCode = determineErrorCode(e);
 

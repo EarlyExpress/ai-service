@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "p_shipment_notification")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ShipmentNotificationDomain {
+public class ShipmentNotification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +19,7 @@ public class ShipmentNotificationDomain {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "request_id", nullable = false, unique = true)
-    private ShipmentRequestDomain shipmentRequest;
+    private Shipment shipmentRequest;
 
     @Column(name = "final_shipment_deadline", nullable = false)
     private LocalDateTime finalShipmentDeadline;
@@ -36,7 +36,7 @@ public class ShipmentNotificationDomain {
     @Column(name = "notification_time")
     private LocalDateTime notificationTime; // 슬랙 알림 발송 시간
 
-    public ShipmentNotificationDomain(ShipmentRequestDomain shipmentRequest, LocalDateTime finalShipmentDeadline
+    public ShipmentNotification(Shipment shipmentRequest, LocalDateTime finalShipmentDeadline
             , String slackMessageBody) {
         this.shipmentRequest = shipmentRequest;
         this.finalShipmentDeadline = finalShipmentDeadline;
