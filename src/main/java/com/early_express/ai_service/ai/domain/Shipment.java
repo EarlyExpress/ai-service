@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "p_shipment_request")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ShipmentRequestDomain {
+public class Shipment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,7 +63,7 @@ public class ShipmentRequestDomain {
     private LocalTime personnelWorkEnd;
 
     @Builder
-    public  ShipmentRequestDomain(String orderId, LocalDateTime orderTime, String customerName, String customerEmail
+    public Shipment(String orderId, LocalDateTime orderTime, String customerName, String customerEmail
             , List<ItemInfoDomain> itemInfos, LocalDateTime deliveryDeadline, String shipmentOrigin
             , List<String> waypoints, String shipmentDestination, String deliveryManagerName
             , String deliveryManagerContact, LocalTime personnelWorkStart, LocalTime personnelWorkEnd) {
