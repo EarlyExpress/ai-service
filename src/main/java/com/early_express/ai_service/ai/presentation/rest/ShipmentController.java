@@ -1,8 +1,10 @@
 package com.early_express.ai_service.ai.presentation.rest;
 
-import brave.Response;
 import com.early_express.ai_service.ai.application.service.ShipmentAiService;
+import com.early_express.ai_service.ai.application.service.TimeCalculateService;
 import com.early_express.ai_service.ai.presentation.rest.dto.ShipmentAiRequest;
+import com.early_express.ai_service.ai.presentation.rest.dto.TimeCalculateRequest;
+import com.early_express.ai_service.ai.presentation.rest.dto.TimeCalculateResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -19,19 +21,22 @@ import java.util.Map;
 @Slf4j
 @Tag(name = "📦 Shipment Process API", description = "AI를 이용한 발송 시한 계산 및 Slack 알림 API")
 @RestController
-@RequestMapping("/api/v1/shipment")
+@RequestMapping("")
 public class ShipmentController {
 
     private final ShipmentAiService shipmentAiService;
 
+    private final TimeCalculateService timeCalculateService;
+
     // 생성자 주입
-    public ShipmentController(ShipmentAiService shipmentAiService) {
+    public ShipmentController(ShipmentAiService shipmentAiService, TimeCalculateService timeCalculateService) {
         this.shipmentAiService = shipmentAiService;
+        this.timeCalculateService = timeCalculateService;
     }
 
     @Operation(summary = "새 주문 알림 및 최종 발송 시한 계산 요청",
             description = "외부 시스템으로부터 주문 데이터를 받아 AI를 통해 최종 발송 시한을 계산하고 Slack 알림을 보냅니다.")
-    @PostMapping(value = "/notify-order", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/shipment/notify-order", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, String>> notifyNewOrder(@RequestBody ShipmentAiRequest orderRequest) {
         String message;
         HttpStatus status;
@@ -71,5 +76,16 @@ public class ShipmentController {
         }
 
         return ResponseEntity.status(status).body(Map.of("message", message));
+    }
+
+    /**
+     * AI 기반 배송 시한 및 예상 완료 시간을 계산하는 API 엔드포인트입니다.
+     * @param timeCalculateRequest HTTP 요청 본문으로 받은 TimeCalculateRequest DTO
+     * @return 계산 결과를 담은 TimeCalculateResponse DTO
+     */
+    @PostMapping("/v1/aiagent/internal/time/calculate")
+    public TimeCalculateResponse responseBack(@RequestBody TimeCalculateRequest timeCalculateRequest) {
+
+        return timeCalculateService.calculate(timeCalculateRequest);
     }
 }
