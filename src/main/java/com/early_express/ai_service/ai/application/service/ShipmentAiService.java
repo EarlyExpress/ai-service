@@ -149,7 +149,7 @@ public class ShipmentAiService {
         PromptTemplate promptTemplate = new PromptTemplate(shipmentDeadlinePromptResource);
         Map<String, Object> promptVariables = new HashMap<>();
 
-        // 데이터 변환 및 매핑 (이전 답변에서 작성된 로직)
+        // 데이터 변환 및 매핑
         String itemInfosString = request.getItemInfos() != null ?
                 request.getItemInfos().stream()
                         .map(item -> item.getName() + " " + item.getQuantitiy() + item.getUnit())
