@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Configuration
-@EnableFeignClients(basePackages = "com.early_express.delivery_service")
+@EnableFeignClients(basePackages = "com.early_express.ai_service")
 public class FeignConfig {
 
     /**

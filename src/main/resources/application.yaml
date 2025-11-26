@@ -105,6 +105,8 @@ eureka:
       # Eureka 서버 URL (고가용성을 위해 2개 서버 지정)
       defaultZone: ${EUREKA_DEFAULT_ZONE:http://localhost:3150/eureka/,http://localhost:3151/eureka/}
     registry-fetch-interval-seconds: 5  # 레지스트리 갱신 간격 (5초)
+    ai-service:
+      url: http://localhost:4030/
 
 springdoc:
   api-docs:
@@ -121,6 +123,9 @@ springdoc:
   server:
     url: http://localhost:4030
 
+
+kakao:
+  apikey: ${KAKAO_API_KEY}
 
 # ========================================
 # 서비스별 커스터마이징이 필요한 설정 예시
