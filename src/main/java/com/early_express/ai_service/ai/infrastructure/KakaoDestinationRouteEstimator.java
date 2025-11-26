@@ -41,8 +41,8 @@ public class KakaoDestinationRouteEstimator implements DestinationRouteEstimator
             JsonNode docs = node.get("documents");
             if (!docs.isEmpty()) {
                 JsonNode addr = docs.get(0).get("address");
-                double lat = addr.get("y").asDouble(0.0);// 위도
-                double lon = addr.get("x").asDouble(0.0); // 경도
+                double lat = addr.get("x").asDouble(0.0);// 위도
+                double lon = addr.get("y").asDouble(0.0); // 경도
 
 
                 // 출발지
