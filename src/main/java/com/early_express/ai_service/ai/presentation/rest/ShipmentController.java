@@ -1,7 +1,9 @@
 package com.early_express.ai_service.ai.presentation.rest;
 
+import brave.Response;
 import com.early_express.ai_service.ai.application.service.ShipmentAiService;
 import com.early_express.ai_service.ai.application.service.TimeCalculateService;
+import com.early_express.ai_service.ai.application.service.dto.SlackDto;
 import com.early_express.ai_service.ai.presentation.rest.dto.ShipmentAiRequest;
 import com.early_express.ai_service.ai.presentation.rest.dto.TimeCalculateRequest;
 import com.early_express.ai_service.ai.presentation.rest.dto.TimeCalculateResponse;
@@ -40,6 +42,7 @@ public class ShipmentController {
     public ResponseEntity<Map<String, String>> notifyNewOrder(@RequestBody ShipmentAiRequest orderRequest) {
         String message;
         HttpStatus status;
+        String finalMessage = null;
 
         if (orderRequest == null || orderRequest.getOrderId() == null) {
             message = "요청 오류: 주문 데이터가 유효하지 않거나 주문 ID가 누락되었습니다.";
@@ -52,7 +55,8 @@ public class ShipmentController {
         try {
             // 핵심 서비스 호출 (여기서는 ShipmentAiService만 호출한다고 가정)
             // 실제 구현 시에는 Slack 알림까지 포함된 통합 서비스(ShipmentProcessService)를 호출해야 함
-            shipmentAiService.processNewOrderForShipment(orderRequest); // 통합 로직을 처리하는 메서드 호출
+            finalMessage = shipmentAiService.processNewOrderForShipment(orderRequest); // 통합 로직을 처리하는 메서드 호출
+
 
             message = "AI 기반 발송 시한 계산 및 허브 담당자 알림 처리가 완료되었습니다.";
             status = HttpStatus.OK;
@@ -75,7 +79,7 @@ public class ShipmentController {
             log.error("주문 ID {} 처리 중 알 수 없는 오류 발생: {}", orderRequest.getOrderId(), e.getMessage(), e);
         }
 
-        return ResponseEntity.status(status).body(Map.of("message", message));
+        return ResponseEntity.status(status).body(Map.of("message", finalMessage));
     }
 
     /**

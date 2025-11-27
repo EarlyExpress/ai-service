@@ -1,5 +1,6 @@
 package com.early_express.ai_service.ai.application.service;
 
+import com.early_express.ai_service.ai.application.service.dto.SlackDto;
 import com.early_express.ai_service.ai.domain.Shipment;
 import com.early_express.ai_service.ai.infrastructure.ShipmentRepository;
 import com.early_express.ai_service.ai.presentation.rest.dto.ShipmentAiRequest;
@@ -16,9 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -42,7 +41,7 @@ public class ShipmentAiService {
     }
 
     @Transactional
-    public void processNewOrderForShipment(ShipmentAiRequest request) {
+    public String processNewOrderForShipment(ShipmentAiRequest request) {
 
         // AI에게 최종 발송 시한 계산 요청
         ShipmentAiResponse aiResponse = getFinalShipmentDeadlineFromAi(request);
@@ -51,6 +50,7 @@ public class ShipmentAiService {
         LocalDateTime finalDeadline = aiResponse.getFinalShipmentDeadline(); // 사용하지 않아 주석 처리
         LocalDateTime estimatedTime = aiResponse.getEstimatedTime();
         //System.out.println("finalDeadline = " + aiResponse);
+        String finalMessage;
 
         String orderId = request.getOrderId();
 
@@ -77,6 +77,7 @@ public class ShipmentAiService {
                         .personnelWorkStart(request.getPersonnelWorkStart())
                         .personnelWorkEnd(request.getPersonnelWorkEnd())
                         .build();
+
             }
 
             // 4. 엔티티 업데이트: updateAiResults() 메서드 사용 (Shipment 엔티티에 추가된 메서드 가정)
@@ -99,12 +100,15 @@ public class ShipmentAiService {
             System.out.println(slackMessage);
 
             // Slack 서비스를 통해 발송 허브 담당자에게 알림 전송
-            notificationService.notifyShipmentHub(slackMessage);
+            //notificationService.notifyShipmentHub(slackMessage);
             log.info("주문 ID {}에 대한 Slack 알림이 성공적으로 전송되었습니다.", orderId);
+
+            return slackMessage;
 
         } catch (Exception e) {
             log.warn("Slack 알림 전송 중 오류 발생 (주문 ID: {}): {}", orderId, e.getMessage());
             // 알림 실패는 경고로 처리
+            return null;
         }
 
     }
